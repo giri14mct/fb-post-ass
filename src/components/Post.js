@@ -15,9 +15,10 @@ function Post() {
     const [choosedGif, setChoosedGif] = useState('')
     const [isLoaded, setIsLoaded] = useState(false)
     const [modalOpen, setModalOpen] = useState(false)
-    const [renderTxt, setRenderTxt] = useState('')
-    const [renderUrl, setRenderUrl] = useState('')
-
+    const [finalRender, setFinalRender] = useState([{
+        renderTxt: '',
+        renderUrl: ''
+    }])
     //For Fetching Trending Api's
     useEffect(() => {
         const apiResult = async () => {
@@ -94,15 +95,15 @@ function Post() {
         setChoosedGif(props)
     }
 
-    //For Post Gif's on Footer area
+    //For Update the state of an post
     const postUpdater = (e) => {
         e.preventDefault()
-        setRenderTxt(postText)
-        setRenderUrl(choosedGif)
+        if (postText && choosedGif) {
+            setFinalRender((data) => [...data, { renderTxt: postText, renderUrl: choosedGif }])
+        }
         setPostText('')
         setChoosedGif('')
     }
-
     //For Update Post Input Area
     const postInput = e => setPostText(e.target.value)
 
@@ -157,8 +158,8 @@ function Post() {
                 <button className="post" onClick={postUpdater} > Post </button>
             </div>
             {
-                (renderTxt === '' || renderUrl === '') ? null : (
-                    < PostDisplayer renderTxt={renderTxt} renderUrl={renderUrl} />
+                (finalRender.renderTxt === '' || finalRender.renderUrl === '') ? null : (
+                    < PostDisplayer finalRender={finalRender} />
                 )
             }
         </>
